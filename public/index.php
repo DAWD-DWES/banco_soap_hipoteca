@@ -11,7 +11,8 @@ use App\dao\{
     ClienteDAO
 };
 use App\modelo\{
-    Banco
+    Banco,
+    GestorDivisasSOAP
 };
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
@@ -28,29 +29,20 @@ $blade->setBaseURL("http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/"
 
 // Establece conexión a la base de datos PDO
 try {
-    $host = $_ENV['DB_HOST'];
-    $port = $_ENV['DB_PORT'];
-    $database = $_ENV['DB_DATABASE'];
-    $usuario = $_ENV['DB_USUARIO'];
-    $password = $_ENV['DB_PASSWORD'];
-    $pdo = BD::getConexion($host, $port, $database, $usuario, $password);
+    $bd = BD::getConexion();
 } catch (PDOException $error) {
     echo $blade->run("cnxbderror", compact('error'));
     die;
 }
 
-$operacionDAO = new OperacionDAO($pdo);
-$cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
-$clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
+$operacionDAO = new OperacionDAO($bd);
+$cuentaDAO = new CuentaDAO($bd, $operacionDAO);
+$clienteDAO = new ClienteDAO($bd, $cuentaDAO);
 
-$banco = new Banco("Midas");
-$banco->setClienteDAO($clienteDAO);
-$banco->setCuentaDAO($cuentaDAO);
-$banco->setOperacionDAO($operacionDAO);
+$gestorDivisas = new GestorDivisasSOAP();
 
-$banco->setComisionCC(5);
-$banco->setMinSaldoComisionCC(1000);
-$banco->setInteresCA(2);
+$banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Midas", [3, 1000], [1.5, 0.5]);
+
 if (filter_has_var(INPUT_POST, 'creardatos')) {
     cargaDatos($banco);
     echo $blade->run('principal');
@@ -59,13 +51,24 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         echo $blade->run('carga_datos');
     } elseif (filter_has_var(INPUT_POST, 'infocliente')) {
         $dni = filter_input(INPUT_POST, 'dnicliente');
-        $cliente = $banco->obtenerCliente($dni);
-        $cuentas = array_map(fn($idCuenta) => $cuentaDAO->obtenerPorId($idCuenta), $cliente->getIdCuentas());
-        echo $blade->run('datos_cliente', compact('cliente', 'cuentas'));
+        try {
+            $cliente = $banco->obtenerCliente($dni);
+            $cuentas = array_map(fn($idCuenta) => $banco->obtenerCuenta($idCuenta), $cliente->getIdCuentas());
+            echo $blade->run('datos_cliente', compact('cliente', 'cuentas'));
+        } catch (ClienteNoEncontradoException $ex) {
+            echo $blade->run('principal', ['dniCliente' => $dni, 'errorCliente' => true]);
+            exit;
+        }
     } elseif (filter_has_var(INPUT_POST, 'infocuenta')) {
         $idCuenta = filter_input(INPUT_POST, 'idcuenta');
-        $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo $blade->run('datos_cuenta', compact('cuenta'));
+        try {
+            $cuenta = $banco->obtenerCuenta((int) $idCuenta);
+            $cliente = $banco->obtenerClientePorId($cuenta->getIdCliente());
+            echo $blade->run('datos_cuenta', compact('cuenta', 'cliente'));
+        } catch (CuentaNoEncontradaException $ex) {
+            echo $blade->run('principal', ['idCuenta' => $idCuenta, 'errorCuenta' => true]);
+            exit;
+        }
     } elseif (filter_has_var(INPUT_GET, 'pettransferencia')) {
         echo $blade->run('transferencia');
     } elseif (filter_has_var(INPUT_POST, 'transferencia')) {

@@ -30,22 +30,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="divisa.php?petconsultadivisa">Consulta Cambio Divisa</a>
                         </li>
-                        <li class="nav-item">
+                         <li class="nav-item">
                             <a class="nav-link" href="hipoteca.php?petconsultahipoteca">Hipoteca</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
         <main class="flex-fill">
             <!-- Área de contenido central -->
             <div class="container mt-4">
-                @section('contenido')  
-                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'infocliente'])
-                @endcomponent
-                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por Id de Cuenta', 'fieldName' => 'idcuenta', 'info' => 'infocuenta'])
-                @endcomponent
-                @show
+                @yield('contenido')
             </div>
         </main>
         @include('parciales.piepagina')
