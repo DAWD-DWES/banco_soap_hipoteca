@@ -10,10 +10,8 @@ use App\dao\{
     CuentaDAO,
     ClienteDAO
 };
-use App\modelo\{
-    Banco,
-    GestorDivisasSOAP
-};
+use App\modelo\Banco;
+   
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 
@@ -39,7 +37,6 @@ $operacionDAO = new OperacionDAO($bd);
 $cuentaDAO = new CuentaDAO($bd, $operacionDAO);
 $clienteDAO = new ClienteDAO($bd, $cuentaDAO);
 
-$gestorDivisas = new GestorDivisasSOAP();
 
 $banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Midas", [3, 1000], [1.5, 0.5]);
 
