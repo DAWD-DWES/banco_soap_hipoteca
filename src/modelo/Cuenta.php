@@ -9,8 +9,6 @@ use \DateTime;
  */
 abstract class Cuenta implements IProductoBancario {
 
-    protected OperacionDAO $operacionDAO;
-
     /**
      * Id de la cuenta
      * @var int

@@ -86,7 +86,8 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
     } elseif (filter_has_var(INPUT_GET, 'movimientos')) {
         $idCuenta = filter_input(INPUT_GET, 'idCuenta');
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo $blade->run('datos_cuenta', compact('cuenta'));
+        $cliente = $banco->obtenerClientePorId($cuenta->getIdCliente());
+        echo $blade->run('datos_cuenta', compact('cuenta', 'cliente'));
     } else {
         echo $blade->run('principal');
     }
