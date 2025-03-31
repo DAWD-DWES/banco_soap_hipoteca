@@ -8,7 +8,7 @@ use Laminas\Soap\AutoDiscover;
 
 $autodiscover = new AutoDiscover();
 $autodiscover->setClass(CalculoHipoteca::class)
-             ->setUri('http://localhost/servidorSoap/servidor.php');
+             ->setUri('http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php');
 
 // Obtener el XML del WSDL
 $wsdlXml = $autodiscover->toXml();

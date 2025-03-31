@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost/servidorSoap/servidor.php" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" name="CalculoHipoteca" targetNamespace="http://localhost/servidorSoap/servidor.php">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" name="CalculoHipoteca" targetNamespace="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php">
     <types>
-        <xsd:schema targetNamespace="http://localhost/servidorSoap/servidor.php">
+        <xsd:schema targetNamespace="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php">
             <xsd:complexType name="CalculoCuotaRequest">
                 <xsd:all>
                     <xsd:element name="cantidad" type="xsd:float" nillable="true"/>
@@ -26,18 +26,18 @@
     <binding name="CalculoHipotecaBinding" type="tns:CalculoHipotecaPort">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="calculoCuota">
-            <soap:operation soapAction="http://localhost/servidorSoap/servidor.php#calculoCuota"/>
+            <soap:operation soapAction="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php#calculoCuota"/>
             <input>
-                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/servidorSoap/servidor.php"/>
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php"/>
             </input>
             <output>
-                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/servidorSoap/servidor.php"/>
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php"/>
             </output>
         </operation>
     </binding>
     <service name="CalculoHipotecaService">
         <port name="CalculoHipotecaPort" binding="tns:CalculoHipotecaBinding">
-            <soap:address location="http://localhost/servidorSoap/servidor.php"/>
+            <soap:address location="http://localhost/banco_soap_hipoteca/servidorSoap/servidor.php"/>
         </port>
     </service>
     <message name="calculoCuotaIn">
