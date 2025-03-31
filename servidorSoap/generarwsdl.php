@@ -1,9 +1,7 @@
 <?php
-require '../vendor/autoload.php';
+require './vendor/autoload.php';
 
-require './src/CalculoHipoteca.php';
-require_once './src/CalculoCuotaRequest.php';
-
+use ServSOAP\CalculoHipoteca;
 use Laminas\Soap\AutoDiscover;
 
 $autodiscover = new AutoDiscover();
