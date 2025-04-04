@@ -11,7 +11,8 @@ use App\dao\{
     ClienteDAO
 };
 use App\modelo\Banco;
-   
+use App\excepciones\ClienteNoEncontradoException;
+use App\excepciones\CuentaNoEncontradaException;
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
 
@@ -36,7 +37,6 @@ try {
 $operacionDAO = new OperacionDAO($bd);
 $cuentaDAO = new CuentaDAO($bd, $operacionDAO);
 $clienteDAO = new ClienteDAO($bd, $cuentaDAO);
-
 
 $banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Midas", [3, 1000], [1.5, 0.5]);
 
